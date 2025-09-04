@@ -33,9 +33,20 @@ int append_to_slice(slice *s, void *element);
  * @param index the index you want to get
  * @return pointer to the value
  */
-void *get(slice s, size_t index);
+void *get(slice *s, size_t index);
+
+/*
+ * @brief Frees your slice
+ */
 void free_slice(slice *s);
-void concat_slices(slice *dest, slice *src);
+
+/**
+ * @brief Concatenates two slices and returns a new slice.
+ * @param slice1 The first slice.
+ * @param slice2 The second slice.
+ * @return A new slice containing elements of slice1 followed by slice2.
+ */
+slice concat_slices(slice *slice1, slice *slice2);
 void copy_slice(slice *dest, slice *src);
 void slice_slice(slice *s, size_t start, size_t end);
 void print_slice(slice *s, void (*print_element)(void *));

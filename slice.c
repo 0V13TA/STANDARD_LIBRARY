@@ -3,6 +3,12 @@
 #include "stdlib.h"
 #include "headers/slice.h"
 
+int main(int argc, char const *argv[])
+{
+    printf("Here");
+    return 0;
+}
+
 slice create_slice(size_t element_size)
 {
     slice s;
@@ -63,4 +69,38 @@ void *get(slice *s, size_t index)
     if (index >= s->len)
         return NULL; // Out of bounds
     return (char *)s->data + index * s->element_size;
+}
+
+void free_slice(slice *s)
+{
+    if (s->data != s->pocket && s->data != NULL)
+    {
+        free(s->data);
+        s->data = s->pocket;
+    }
+}
+
+slice concat_slices(slice *slice1, slice *slice2)
+{
+    if (slice1->element_size != slice2->element_size)
+    {
+        printf("Slice 1 and 2 element sizes must be the same");
+        return create_slice(slice1->element_size);
+    }
+
+    size_t new_len = slice1->len + slice2->len;
+
+    slice new_slice = create_slice(slice1->element_size);
+    for (size_t i = 0; i < new_len; i++)
+    {
+        if (i < slice1->len)
+        {
+            append_to_slice(&new_slice, get(slice1, i));
+        }
+        else
+        {
+            append_to_slice(&new_slice, get(slice2, i - slice2->len));
+        }
+    }
+    return new_slice;
 }
